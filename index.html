@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Formulário Staff - Nova York City</title>
+
+<style>
+body{
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+    background:url("logo.png") no-repeat center center fixed;
+    background-size:cover;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    background:white;
+    width:95%;
+    max-width:600px;
+    padding:30px;
+    border-radius:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+    text-align:center;
+    color:#1565c0;
+}
+
+.progress{
+    height:8px;
+    background:#ddd;
+    border-radius:20px;
+    margin-bottom:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#1565c0;
+    transition:0.3s;
+}
+
+.pergunta{
+    display:none;
+}
+
+.pergunta.ativa{
+    display:block;
+}
+
+textarea{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-top:10px;
+}
+
+select{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-top:10px;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-top:10px;
+}
+
+.botoes{
+    margin-top:20px;
+    display:flex;
+    justify-content:space-between;
+}
+
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#1565c0;
+    color:white;
+}
+
+button:hover{
+    background:#0d47a1;
+}
+
+.final{
+    text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Formulário Staff - Nova York City</h2>
+
+<div class="progress">
+<div class="progress-bar" id="barra"></div>
+</div>
+
+<form id="formStaff">
+
+<!-- 1 -->
+<div class="pergunta ativa">
+<label>Descreva brevemente o que é OCC e IC:</label>
+<textarea required></textarea>
+</div>
+
+<!-- 2 -->
+<div class="pergunta">
+<label>Estou em alta velocidade e capoto meu veículo. O que devo fazer?</label>
+<textarea required></textarea>
+</div>
+
+<!-- 3 -->
+<div class="pergunta">
+<label>O Staff pode se expor e andar no meio dos Players?</label>
+<select required>
+<option value="">Selecione</option>
+<option>Sim</option>
+<option>Não</option>
+<option>Somente se expor para amigos ou conhecidos</option>
+</select>
+</div>
+
+<!-- 4 -->
+<div class="pergunta">
+<label>Posso brincar ou zoar com outros Staffs em horário de trabalho?</label>
+<select required>
+<option value="">Selecione</option>
+<option>Sim, a staff é um lugar de resenha 😅</option>
+<option>Só às vezes com pessoas conhecidas</option>
+<option>Não, pois não faço brincadeiras em serviço.</option>
+</select>
+</div>
+
+<!-- 5 -->
+<div class="pergunta">
+<label>Posso pedir senha ou email de um Player? Justifique.</label>
+<textarea required></textarea>
+</div>
+
+<!-- 6 -->
+<div class="pergunta">
+<label>Após racismo/preconceito contra Staff, qual punição aplicar?</label>
+<textarea required></textarea>
+</div>
+
+<!-- 7 -->
+<div class="pergunta">
+<label>Estou telando uma ação e vejo Anti-RP. O que devo fazer?</label>
+<textarea required></textarea>
+</div>
+
+<!-- 8 FINAL -->
+<div class="pergunta final">
+<h3>FINAL DA PROVA</h3>
+<p>Agradecemos sua colaboração até aqui!</p>
+<p>Os Staffs avaliarão seu formulário.</p>
+<p>Aguarde o resultado e Boa sorte!</p>
+
+<label>ID do Discord para contato:</label>
+<input type="text" id="discord" placeholder="Somente números" required oninput="this.value=this.value.replace(/\D/g,'')">
+
+</div>
+
+<div class="botoes">
+<button type="button" onclick="voltar()">Voltar</button>
+<button type="button" onclick="proximo()">Próximo</button>
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+const webhookURL = "https://docs.google.com/forms/d/e/1FAIpQLSf97u1l_G4vkLJajFAApY-tHqy1VI53ZVMAT4baKNnWAeuTtA/viewform?usp=dialog";
+
+let etapa = 0;
+const perguntas = document.querySelectorAll(".pergunta");
+const barra = document.getElementById("barra");
+
+function atualizarBarra(){
+let porcentagem = ((etapa+1)/perguntas.length)*100;
+barra.style.width = porcentagem + "%";
+}
+
+function proximo(){
+
+let atual = perguntas[etapa];
+let campo = atual.querySelector("textarea, select, input");
+
+if(campo && !campo.value){
+alert("Responda antes de continuar.");
+return;
+}
+
+atual.classList.remove("ativa");
+etapa++;
+
+if(etapa >= perguntas.length){
+enviar();
+return;
+}
+
+perguntas[etapa].classList.add("ativa");
+atualizarBarra();
+}
+
+function voltar(){
+if(etapa === 0) return;
+
+perguntas[etapa].classList.remove("ativa");
+etapa--;
+perguntas[etapa].classList.add("ativa");
+atualizarBarra();
+}
+
+function enviar(){
+
+let respostas = document.querySelectorAll("textarea, select");
+let discord = document.getElementById("discord").value;
+
+if(!/^\d{17,20}$/.test(discord)){
+alert("ID do Discord inválido!");
+return;
+}
+
+let texto = "📋 NOVO FORMULÁRIO STAFF\n\n";
+
+respostas.forEach((r,i)=>{
+texto += "Pergunta " + (i+1) + ":\n" + r.value + "\n\n";
+});
+
+texto += "🤖 Discord: <@" + discord + ">";
+
+fetch(webhookURL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({content:texto})
+});
+
+alert("Formulário enviado com sucesso!");
+location.reload();
+}
+
+atualizarBarra();
+
+</script>
+
+</body>
+</html>
